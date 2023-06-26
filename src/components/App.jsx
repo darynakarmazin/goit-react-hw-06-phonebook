@@ -7,7 +7,6 @@ import { ContactList } from './contactList/ContactList';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from 'redux/filterSlice';
 import { addedContact, deletedContact } from 'redux/contactsSlice';
-import { nanoid } from '@reduxjs/toolkit';
 
 export function App() {
   const dispatch = useDispatch();
@@ -27,13 +26,8 @@ export function App() {
       alert(`${name} is already in contacts`);
       return;
     }
-    const contact = {
-      id: nanoid(),
-      name,
-      number,
-    };
 
-    dispatch(addedContact(contact));
+    dispatch(addedContact(name, number));
   };
 
   const changeFilter = event => dispatch(setFilter(event.currentTarget.value));
