@@ -1,26 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { nanoid } from 'nanoid';
+import React from 'react';
 
 import { Wrapper, Header } from './App.styled';
 import { ContactForm } from './contactForm/ContactForm';
 import { Filter } from './filter/Filter';
 import { ContactList } from './contactList/ContactList';
-const contactsKey = 'contacts';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilter } from 'redux/filterSlice';
+import { addedContact, deletedContact } from 'redux/contactsSlice';
+import { nanoid } from '@reduxjs/toolkit';
 
 export function App() {
-  const [contacts, setContacts] = useState(
-    () => JSON.parse(localStorage.getItem(contactsKey)) ?? []
-  );
-  const [filter, setFilter] = useState('');
-
-  useEffect(() => {
-    localStorage.setItem(contactsKey, JSON.stringify(contacts));
-  }, [contacts]);
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts);
+  const filter = useSelector(state => state.filter);
 
   const deleteContact = contactId => {
-    setContacts(prevContacts =>
-      prevContacts.filter(contact => contact.id !== contactId)
-    );
+    dispatch(deletedContact(contactId));
   };
 
   const addContact = (name, number) => {
@@ -38,12 +33,10 @@ export function App() {
       number,
     };
 
-    setContacts(prevContacts => [contact, ...prevContacts]);
+    dispatch(addedContact(contact));
   };
 
-  const changeFilter = event => {
-    setFilter(event.currentTarget.value);
-  };
+  const changeFilter = event => dispatch(setFilter(event.currentTarget.value));
 
   const getFiltredContacts = () => {
     const normalizedFilter = filter.toLowerCase();
@@ -51,8 +44,8 @@ export function App() {
       contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
-
   const filtredContacts = getFiltredContacts();
+
   return (
     <Wrapper>
       <Header>Phonebook</Header>
