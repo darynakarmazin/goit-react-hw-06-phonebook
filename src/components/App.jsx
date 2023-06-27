@@ -7,11 +7,12 @@ import { ContactList } from './contactList/ContactList';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from 'redux/filterSlice';
 import { addedContact, deletedContact } from 'redux/contactsSlice';
+import { getСontacts, getFilter } from 'redux/selectors';
 
 export function App() {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts);
-  const filter = useSelector(state => state.filter);
+  const contacts = useSelector(getСontacts);
+  const filter = useSelector(getFilter);
 
   const deleteContact = contactId => {
     dispatch(deletedContact(contactId));
